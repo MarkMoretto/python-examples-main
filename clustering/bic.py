@@ -3,6 +3,8 @@
 BIC algoritm for KMeans and other relevant models
 """
 
+__all__ = ['compute_bic',]
+
 import numpy as np
 from scipy.spatial import distance
 from scipy.spatial.distance import squareform
