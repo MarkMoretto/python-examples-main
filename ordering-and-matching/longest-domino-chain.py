@@ -4,6 +4,8 @@ Purpose: Find longest chain of dominoes from given set.
 Date created: 2020-01-14
 Contributor(s): Mark Moretto
 
+Ref URI: https://stackoverflow.com/questions/59726111/longest-domino-sequence
+
 Note:
   Focus points would be:
     starting piece
