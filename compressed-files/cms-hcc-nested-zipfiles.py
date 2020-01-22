@@ -49,7 +49,7 @@ with zipfile.ZipFile(zf_buffer) as zf:
 zf_buffer.close()
 
 #-- Get ICD mappings
-#-- May require more general uri search
+#-- May require more general uri search if looking for non-midyear files
 cms_icd_mappings_uri = f"https://www.cms.gov/Medicare/Health-Plans/MedicareAdvtgSpecRateStats/Downloads/{model_year}MidyearFinalICD-10-CMMappings.zip"
 
 zf_buffer = BytesIO(ureq.urlopen(cms_icd_mappings_uri).read())
