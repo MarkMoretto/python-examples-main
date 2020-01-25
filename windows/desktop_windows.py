@@ -2,11 +2,14 @@
 """
 Purpose: Restore window positioning after waking from sleep
 Date created: 2020-01-24
-
 https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthreadid
-
 Contributor(s):
     Mark M.
+
+user32_dll = r"C:\Windows\System32\user32.dll"
+kern32_dll = r"C:\Windows\System32\kernel32.dll"
+user32 = C.windll.LoadLibrary(usr32_dll)
+kern32 = C.windll.LoadLibrary(kern32_dll)
 """
 
 import re
@@ -14,29 +17,36 @@ import ctypes as C
 from ctypes import wintypes
 
 
-# usr32_dll = r"C:\Windows\System32\user32.dll"
-# kern32_dll = r"C:\Windows\System32\kernel32.dll"
-# usr32 = C.windll.LoadLibrary(usr32_dll)
-# kern32 = C.windll.LoadLibrary(kern32_dll)
-
 k32 = C.WinDLL("kernel32", use_last_error=True)
 user32 = C.WinDLL("user32", use_last_error=True)
 
 
-# ### Misc
-# k32.GetCurrentThreadId.restype = wtypes.DWORD
-# curr_thread = k32.GetCurrentThreadId()
+### Misc
+k32.GetCurrentThreadId.restype = wintypes.DWORD
+curr_thread = k32.GetCurrentThreadId()
 
-# user32.GetThreadDesktop.restype = wtypes.HDESK
-# user32.GetThreadDesktop.argtypes = [wtypes.DWORD]
-# desktop_thread = user32.GetThreadDesktop(curr_thread)
+user32.GetThreadDesktop.restype = wintypes.HDESK
+user32.GetThreadDesktop.argtypes = [wintypes.DWORD]
+hDesk = user32.GetThreadDesktop(curr_thread)
 
 # k32.GetModuleHandleW.argtypes = [wtypes.LPCWSTR]
 # k32.GetModuleHandleW.restype = wtypes.HMODULE
 
 # hMod = k32.GetModuleHandleW("kernel32.dll")
+null_ptr = C.POINTER(C.c_int)()
+
+@C.WINFUNCTYPE(wintypes.BOOL, wintypes.LPCWSTR, wintypes.LPARAM)
+def EnumWindowStationProc(a, b):
+    print("foo has finished its job (%d, %d)" % (a.value, b.value))
+
+EnumWindowStationProc = C.WINFUNCTYPE(wintypes.BOOL, wintypes.LPCWSTR, wintypes.LPARAM)
+ewsp = EnumWindowStationProc()
+user32.EnumWindowStationsW.argtypes = [C.POINTER(EnumWindowStationProc), wintypes.LPARAM]
+user32.EnumWindowStationsW.restype = wintypes.BOOL
+user32.EnumWindowStationsW(ewsp, null_ptr)
 
 
+EnumDesktopWindows
 
 
 ### Window Information and Placement ###
@@ -122,11 +132,5 @@ if user32.GetWindowPlacement(hWnd, windowplacement) == 0:
 
 
 
-
 user32.GetForegroundWindow.restype = wintypes.HWND
 focus_window = user32.GetForegroundWindow()
-
-
-
-
-
