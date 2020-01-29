@@ -22,7 +22,7 @@ def cls_prop(name, data_type):
     return prop
 
 
-class DateFormatMixin:
+class DateReformatter:
 
     date_string = cls_prop('date_string', str)
 
@@ -93,7 +93,7 @@ def mixin_tests():
     }
 
     for k, v in test_dict.items():
-        dfm = DateFormatMixin(v)
+        dfm = DateReformatter(v)
         res = dfm.run()
         assert (res == base_case), f"Test error for key: {k}"
         
