@@ -45,3 +45,6 @@ for k, v in l_dict.items():
     exec_str = f"df_{k} = pd.read_csv(r\"{v}\", header=None,)"
     exec(exec_str)
 
+#-- Get and print list of DataFrames in local environment.
+df_name_list = [k for k in locals().keys() if str(k).startswith("df_")]
+print(df_name_list)
