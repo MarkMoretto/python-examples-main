@@ -19,7 +19,7 @@ from urllib.parse import unquote_plus
 
 EXTENSION = "pdf"
 EXCLUDE = "syllabus"
-OUTPUT_FOLDER = r"S:\OFP\Analytics\Population Management\Mark M\AdvancedAnalytics\Resources\stats-tests-exams\bekker"
+OUTPUT_FOLDER = r""
 
 def output_folder_check(fileobj):
 	"""Validate and provide default if OUTPUT_FOLDER not valid or not set."""
