@@ -43,12 +43,8 @@ with urlopen(resources_url) as f:
     raw_data = f.read().decode("utf-8")
 
 
-# tokens = [i.strip() for i in raw_data.split("\n") if len(i.strip()) > 0]
-# tdict = {i:v for i, v in enumerate(tokens)}
-
-
-### Extract links from raw_data string
-href_ptrn = r'<a\s+?href\="([\w\d_\.\[\]%]+){q}">'.format(q = EXTENSION)
+### Extract links from raw_data string using regular expressions pattern
+href_ptrn = rf'<a\s+?href\="([\w\d_\.\[\]%]+){EXTENSION}">'
 p = re.compile(href_ptrn)
 pdf_basenames = set(p.findall(raw_data))
 
