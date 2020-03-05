@@ -1,7 +1,7 @@
+
 """
 Purpose: Parse JPMorgan job description.
 Date created: 2020-03-04
-
 Contributor(s):
     Mark Moretto
 """
@@ -28,7 +28,6 @@ class VersionException(Exception):
 
 class IncorrentVersion(VersionException):
     """Exception raised for Python version requirement errors.
-
     Attributes:
         message - explanation of the error
     """
@@ -36,13 +35,6 @@ class IncorrentVersion(VersionException):
     def __init__(self, message):
         self.message = message
 
-
-
-### This script uses f-strings, which was implemented in Python 3.6.x.
-### Ref: https://www.python.org/dev/peps/pep-0498/
-min_reqd_ver = 36
-if int("".join(pvt()[:2])) < min_reqd_ver:
-    raise IncorrentVersion("Please upgrade Python to version 3.6 or better.")
 
 def key_check(iterable):
     """Check and return single list result."""
@@ -53,6 +45,13 @@ def key_check(iterable):
 
 
 if __name__ == "__main__":
+
+    ### This script uses f-strings, which was implemented in Python 3.6.x.
+    ### Ref: https://www.python.org/dev/peps/pep-0498/
+    min_reqd_ver = 36
+    if int("".join(pvt()[:2])) < min_reqd_ver:
+        raise IncorrentVersion("Please upgrade Python to version 3.6 or better.")
+
 
     url = f"https://jobs.jpmorganchase.com/ShowJob/Id/{job_id}"
     
