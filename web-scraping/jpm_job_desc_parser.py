@@ -128,3 +128,33 @@ if __name__ == "__main__":
     
     ### Print results to terminal
     print(output_title + "\n\n".join(output_desc))
+
+
+    ### Word counts
+    def counter(iterable):
+        tmpdict = {}
+        for i in iterable:
+            if not i in tmpdict.keys():
+                tmpdict[i] = 1
+            else:
+                tmpdict[i] += 1
+        return tmpdict
+    
+    cln_data = re.sub(r"(<\/?.*?>|\n+)", r" ", raw_desc, flags=re.M).strip()
+    
+    cln_data = re.sub(r"\s+", "`", re.sub(r"[^a-z ]+", " ", cln_data, flags=re.I))
+    
+    w_tokens = [i for i in cln_data.split("`") if len(i) > 1]
+    
+    word_count = counter(w_tokens)
+    word_count = dict(sorted(word_count.items(), key=lambda x: x[1], reverse=False))
+    
+    
+    rare_words = [k for k, v in word_count.items() if v < 3 and len(k) > 2]
+    
+    most_freq = sorted(list(set(word_count.values())))[-8:]
+    freq_words = [k for k, v in word_count.items() if v in most_freq]
+    print("\n\nSimple word count metrics for the job description:\n")
+    print("The top 5 most-frequent words are:\n{}".format("\n".join([f"\t{i}" for i in freq_words[:5]])))
+
+    print("The top 5 rarest words are:\n{}".format("\n".join([f"\t{i}" for i in rare_words[:5]])))
