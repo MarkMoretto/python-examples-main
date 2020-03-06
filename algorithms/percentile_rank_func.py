@@ -32,19 +32,17 @@ def percent_rank(iterable, percentile):
 
 ### Tests
 p = 25
-tst1 = [122, 112, 114, 17, 118, 116, 111, 115, 112]
-assert (percent_rank(tst1, p) == 111.5), "Error: Test 1"
+test_data_1 = [122, 112, 114, 17, 118, 116, 111, 115, 112]
+assert (percent_rank(test_data_1, p) == 111.5), "Error: Test 1"
 
 
 p = 75
-tst2 = [1155, 1169, 1188, 1150, 1177, 1145, 1140, 1190, 1175, 1156]
-percent_rank(tst2, p)
-assert (percent_rank(tst1, p) == 1179.75), "Error: Test 2"
+test_data_2 = [1155, 1169, 1188, 1150, 1177, 1145, 1140, 1190, 1175, 1156]
+assert (percent_rank(test_data_2, p) == 1179.75), "Error: Test 2"
 
 
 p = 96
-tst3 = [435.0, 435.0, 442.0, 44.0, 445.0, 454.0, 456.0, 456.0, 456.78, 459.0, 461.0,
+test_data_3 = [435.0, 435.0, 442.0, 44.0, 445.0, 454.0, 456.0, 456.0, 456.78, 459.0, 461.0,
         465.0, 468.0, 469.0, 471.0, 471.0, 472.0, 472.0, 477.0, 477.0, 477.0, 477.0,
         481.0, 488.0, 489.0]
-percent_rank(tst3, p)
-assert (percent_rank(tst1, p) == 488.96), "Error: Test 3"
+assert (percent_rank(test_data_3, p) == 488.96), "Error: Test 3"
