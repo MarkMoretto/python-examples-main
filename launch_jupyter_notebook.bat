@@ -1,3 +1,4 @@
 @ECHO OFF
 
-%ComSpec% /c "(jupyter notebook)"
+::%ComSpec% /c "(jupyter notebook)"
+jupyter notebook
