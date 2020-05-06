@@ -1,0 +1,9 @@
+.ipynb_checkpoints
+**/.ipynb_checkpoints
+*.bat
+
+
+assets/chromedriver.exe
+
+
+sql/DSN.json
