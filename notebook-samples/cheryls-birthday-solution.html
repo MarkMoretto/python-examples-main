@@ -1,0 +1,370 @@
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="When-is-Cheryl's-Birthday?">When is Cheryl's Birthday?<a class="anchor-link" href="#When-is-Cheryl's-Birthday?">&#182;</a></h3><p><strong>Note</strong>: A better "overview" can be found in <a href="https://github.com/norvig/pytudes/blob/master/ipynb/Cheryl.ipynb">this</a> notebook.</p>
+<p><a href="https://www.cnn.com/2015/04/15/living/feat-cheryl-birthday-math-problem-goes-viral/index.html">This</a> puzzle has been around since 2015.  I came across it the other day (in 2020) and decided to try and create a solution.</p>
+<p>Briefly, the puzzle states:</p>
+<blockquote><p>Albert and Bernard became friends with Cheryl, and want to know when her birthday is. Cheryl gave them a list of 10 possible dates:</p>
+</blockquote>
+<table>
+<thead><tr>
+<th style="text-align:center">May</th>
+<th style="text-align:center">June</th>
+<th style="text-align:center">July</th>
+<th style="text-align:center">August</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">14</td>
+<td style="text-align:center">14</td>
+</tr>
+<tr>
+<td style="text-align:center">15</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">15</td>
+</tr>
+<tr>
+<td style="text-align:center">16</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">16</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">17</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">17</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">18</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">19</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<blockquote><p>Cheryl then tells Albert and Bernard separately the month and the day of the birthday respectively.
+Albert: "I don't know when Cheryl's birthday is, and I know that Bernard does not know."
+Bernard: "At first I don't know when Cheryl's birthday is, but I know now."
+Albert: "Then I also know when Cheryl's birthday is."
+So when is Cheryl's birthday?</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Without further ado, here's our BirthdayFinder class.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">BirthdayFinder</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    BirthdayFinder class</span>
+
+<span class="sd">    Argument:</span>
+<span class="sd">        kwargs: key-value map of months and days.</span>
+<span class="sd">                Both keys (months) and values (days) should be in</span>
+<span class="sd">                string format.</span>
+
+<span class="sd">    Example argument:</span>
+<span class="sd">        bd_hints = {</span>
+<span class="sd">              &#39;may&#39;: [&#39;15&#39;, &#39;16&#39;, &#39;19&#39;],</span>
+<span class="sd">              &#39;june&#39;: [&#39;17&#39;, &#39;18&#39;],</span>
+<span class="sd">              &#39;july&#39;: [&#39;14&#39;, &#39;16&#39;],</span>
+<span class="sd">              &#39;august&#39;: [&#39;14&#39;, &#39;15&#39;, &#39;17&#39;],</span>
+<span class="sd">              }        </span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Call &lt;self&gt;.run() and the date should print out.</span>
+<span class="sd">        There will also be a variable called &quot;result&quot; that will house the month and day in a </span>
+<span class="sd">            dictionary collection</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calendar</span> <span class="o">=</span> <span class="n">kwargs</span> <span class="c1"># Setting kwargs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">months</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">calendar</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">days</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">day_counts</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dpm</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># Days per month</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flatten_values</span><span class="p">()</span> <span class="c1"># Sets self.days</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_day_counts</span><span class="p">()</span> <span class="c1"># Sets self.day_counts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span>  <span class="o">=</span> <span class="kc">None</span> <span class="c1"># Will be a dictionary of month and day.</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">mth_str</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">months</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">f</span><span class="s2">&quot;, and </span><span class="si">{xyz[-1]}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;&lt;</span><span class="si">{self.__class__.__name__}</span><span class="s2"> for the months of </span><span class="si">{mth_str}</span><span class="s2">&gt;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">days_per_month</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Find the length of each month&#39;s &quot;daus&quot; list.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dpm</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">calendar</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+
+    <span class="k">def</span> <span class="nf">flatten_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Put all the day numbers into a list.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">days</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">calendar</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">j</span><span class="p">]</span>
+
+
+    <span class="k">def</span> <span class="nf">update_day_counts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the frequency count for each day number in our flattened list.</span>
+<span class="sd">        Populates self.day_counts variable on running.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flatten_values</span><span class="p">()</span>
+        <span class="n">tmp_</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">days</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">tmp_</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">tmp_</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tmp_</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">day_counts</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">tmp_</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+
+
+    <span class="k">def</span> <span class="nf">delete_singles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Delete months that contain single days.&quot;&quot;&quot;</span>
+
+        <span class="c1"># Update remaining days and day counts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_day_counts</span><span class="p">()</span>
+        
+        <span class="c1"># List to hold months that we&#39;re going to remove</span>
+        <span class="c1"># We&#39;ll take this method to avoid a key deletion error.</span>
+        <span class="n">del_months</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">dy</span><span class="p">,</span> <span class="n">ct</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">day_counts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">mth</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">months</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ct</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">dy</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">calendar</span><span class="p">[</span><span class="n">mth</span><span class="p">]:</span>
+                        <span class="n">del_months</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mth</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">mth</span> <span class="ow">in</span> <span class="n">del_months</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">calendar</span><span class="p">[</span><span class="n">mth</span><span class="p">]</span>
+            <span class="c1"># is_deleted.append(self.calendar.pop(mth, None))</span>
+
+
+
+    <span class="k">def</span> <span class="nf">delete_duplicate_days</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Delete duplicate days based on all remaining days.&quot;&quot;&quot;</span>
+
+        <span class="c1"># Create &quot;worker&quot; list</span>
+        <span class="n">multi_days</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Update remaining days and day counts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_day_counts</span><span class="p">()</span>
+
+        <span class="c1"># Populate worker list with days that have a count above 1.</span>
+        <span class="n">multi_days</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[</span><span class="n">day</span> <span class="k">for</span> <span class="n">day</span><span class="p">,</span> <span class="n">ct</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">day_counts</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">ct</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Iterate over our calendar of dates, check to see if a day</span>
+        <span class="c1"># is in out newly-created list, remove it if so.</span>
+        <span class="k">for</span> <span class="n">mth</span><span class="p">,</span> <span class="n">days</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">calendar</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">multi_days</span><span class="p">:</span>
+                <span class="n">days</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">get_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determine the month with a single day and set our result dictionary to </span>
+<span class="sd">        their respective values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set self.dpm variable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">days_per_month</span><span class="p">()</span>
+        
+        <span class="c1"># Create empty result dictionary.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">month</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Run through our days-per-month variable and find a length of 1.</span>
+        <span class="c1"># Update the result dictionary with month and day.</span>
+        <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">ct</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpm</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">ct</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;month&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;day&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calendar</span><span class="p">[</span><span class="n">m</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run it all and print the result.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delete_singles</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delete_duplicate_days</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_solution</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">mth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;month&quot;</span><span class="p">]</span>
+            <span class="n">day</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;day&quot;</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Cheryl&#39;s birthday is: </span><span class="si">{mth}</span><span class="s2"> </span><span class="si">{day}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can create our sample "caldendar" and instantiate a BirthdayFinder class with the given calendar.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dd</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="s1">&#39;may&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;15&#39;</span><span class="p">,</span> <span class="s1">&#39;16&#39;</span><span class="p">,</span> <span class="s1">&#39;19&#39;</span><span class="p">],</span>
+      <span class="s1">&#39;june&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;17&#39;</span><span class="p">,</span> <span class="s1">&#39;18&#39;</span><span class="p">],</span>
+      <span class="s1">&#39;july&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;14&#39;</span><span class="p">,</span> <span class="s1">&#39;16&#39;</span><span class="p">],</span>
+      <span class="s1">&#39;august&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;14&#39;</span><span class="p">,</span> <span class="s1">&#39;15&#39;</span><span class="p">,</span> <span class="s1">&#39;17&#39;</span><span class="p">],</span>
+      <span class="p">}</span>
+
+<span class="n">bf</span> <span class="o">=</span> <span class="n">BirthdayFinder</span><span class="p">(</span><span class="o">**</span><span class="n">dd</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Print the calendar to check.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bf</span><span class="o">.</span><span class="n">calendar</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[5]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{&#39;may&#39;: [&#39;15&#39;, &#39;16&#39;, &#39;19&#39;],
+ &#39;june&#39;: [&#39;17&#39;, &#39;18&#39;],
+ &#39;july&#39;: [&#39;14&#39;, &#39;16&#39;],
+ &#39;august&#39;: [&#39;14&#39;, &#39;15&#39;, &#39;17&#39;]}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Print our initial list of days (unordered).</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bf</span><span class="o">.</span><span class="n">days</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[6]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[&#39;15&#39;, &#39;16&#39;, &#39;19&#39;, &#39;17&#39;, &#39;18&#39;, &#39;14&#39;, &#39;16&#39;, &#39;14&#39;, &#39;15&#39;, &#39;17&#39;]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Finally, run the class and see if we get the expected solution.</p>
+<p>In this case, the solution should be July 16.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bf</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Cheryl&#39;s birthday is: july 16
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+ 
+
