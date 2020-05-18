@@ -1,3 +1,2 @@
 # Ignore some python stuff
 *.py[cd]
-*.ipynb_checkpoints/
