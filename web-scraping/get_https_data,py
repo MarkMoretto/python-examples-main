@@ -1,0 +1,30 @@
+# Simple snippet to read data from an HTTPS website.
+
+import urllib.request as ureq
+
+# Demo URL
+url = r"https://blog.collegevine.com/new-sat-vs-old-sat-score-conversion-chart/"
+
+# Whether or not to split data by default line endings.
+SPLIT_LINES_TF = True
+
+
+# Subclassing `urllib.request.URLopener`
+# Version is the user-agent value for a successful request response.
+class MyURLopener(ureq.URLopener):
+    version = """
+        Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+        """.strip()
+
+
+# instantiate class and get website data.
+opener = MyURLopener()
+
+with opener.open(url) as resp:
+
+    data = resp.read().decode("utf-8")
+
+    # As noted above, if this is `True`, data will
+    # be split by newline characters ('\n' or '\r\n')
+    if SPLIT_LINES_TF:
+        rows = data.splitlines()
