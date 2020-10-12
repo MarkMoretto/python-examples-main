@@ -8,7 +8,7 @@ Contibutor(s):
 
 from functools import lru_cache
 from pandas import DataFrame
-from pandas.api.extensions import DataFrame, register_series_accessor
+from pandas.api.extensions import register_series_accessor
 
 @register_series_accessor("sf")
 class PandasSalesforceIdConverter:
@@ -75,10 +75,16 @@ class PandasSalesforceIdConverter:
 # Tests
 
 id_test_dict = dict(
-    sfid_in = ["a0r90000008cJza", "aCQR000000018HT", "aCQR000000018HYOAY"],
-    sfid_expected = ["a0r90000008cJzaAAE", "aCQR000000018HTOAY", "aCQR000000018HYOAY"],
+    sfid = ["a0r90000008cJza", "aCQR000000018HT", "aCQR000000018HYOAY"],
+    expected = ["a0r90000008cJzaAAE", "aCQR000000018HTOAY", "aCQR000000018HYOAY"],
     )
+
 
 df1 = DataFrame(id_test_dict)
 
-df1.loc[:, "sfid_actual"] = df1["sfid_in"].sf.convert
+df1.loc[:, "actual"] = df1["sfid"].sf.convert
+
+df1.loc[:, "is_match"] = df1.apply(lambda d: 1 if d["actual"] == d["expected"] else 0, axis=1)
+
+if df1["is_match"].sum() == len(id_test_dict["sfid"]):
+    print("All IDs successfully processed!")
