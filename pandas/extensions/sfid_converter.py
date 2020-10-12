@@ -1,7 +1,9 @@
 """
 Summary: Pandas extension for converting 15-character Salesforce IDs to 18-character Salesforce IDs
+
 Date: 2020-10-12
-Contibutor(s):
+
+Contributor(s):
     Mark Moretto
 
 """
@@ -12,9 +14,15 @@ from pandas.api.extensions import register_series_accessor
 
 @register_series_accessor("sf")
 class PandasSalesforceIdConverter:
-    """
-    Salesforce ID converter extension for Pandas.  This should be applied to a series (column) and not the entire dataframe.
+    """Salesforce ID converter extension for Pandas Series.
     
+    (Note: This should be applied to a series (column) and not the entire dataframe.)
+
+    Example: 
+    >>>df = DataFrame({"sfid": ["a0r90000008cJza"], "expected": ["a0r90000008cJzaAAE"]})
+    >>>df.loc[:, "actual"] = df["sfid"].sf.convert
+    >>>df["actual"] == df["expected"]
+    True
     """
     
     # Class variables
@@ -30,7 +38,11 @@ class PandasSalesforceIdConverter:
     
     @staticmethod
     def __get_bin_list(string):
-        """Checks for uppercase letters within ID. Tags 1 if found, 0 otherwise."""
+        """Checks for uppercase letters within ID. Tags 1 if found, 0 otherwise.
+        
+        >>>self.__get_bin_list("ABc")
+        [1, 1, 0]
+        """
         return [1 if str(c).isupper() else 0 for c in string]
  
     
@@ -62,13 +74,18 @@ class PandasSalesforceIdConverter:
         
     @staticmethod
     def decoder(binary_list):
-        """Return decimal value from collection of binary values."""
+        """Return decimal value from collection of binary values.
+        
+        >>>self.decoder([1, 1, 0])
+        3
+        """
         list_len = len(binary_list)
         return sum([2**i if binary_list[i] == 1 else 0 for i in range(list_len)])
     
 
     @property
     def convert(self):
+        """Run __convert_id() method to each row of Series."""
         return self.__obj.apply(self.__convert_id)
         
         
