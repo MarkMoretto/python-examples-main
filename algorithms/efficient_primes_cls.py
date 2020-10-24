@@ -1,14 +1,46 @@
+"""
+Summary: Class for creating list of prime factors for an integer
+Date: 2020-10-24
+Contributor(s):
+    Mark Moretto
+
+Example:
+>>> p = Primes(64)
+>>> p.prime_factors
+[2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61]
+"""
+
 
 
 class Primes:
-    def __init__(self, n):
-        self.__n = n
-        self.set(n)
+    """
+    Class for creating list of prime factors for an integer
 
 
-    def set(self, value):
-        self.p_list = [0] * self.n1
-        self.results = []
+    >>> Primes(4).prime_factors
+    [2, 3]
+
+    >>> p = Primes(4)
+    >>> p.prime_factors
+    [2, 3]
+
+    >>> Primes(4)
+    <Primes 4 />
+
+    >>> p = Primes("a")
+    Traceback (most recent call last):
+        ...
+    TypeError: Integer data type expected.
+    """
+    def __init__(self, number):
+        if isinstance(number, int):
+            self.__n = number
+            self.results = []
+        else:
+            raise TypeError("Integer data type expected.")
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} {self.n} />"
 
     @property
     def n(self):
@@ -17,7 +49,7 @@ class Primes:
     @n.setter
     def n(self, value):
         if not isinstance(value, int):
-            print("Expected integer data type!")
+            raise TypeError("Integer data type expected.")
         else:
             self.__n = value
 
@@ -34,40 +66,36 @@ class Primes:
         return self.n ** 3
 
     def __efficient_prime_factors(self):
+        """Private method to find prime factors of an integer."""
         self.results = []
+        self.p_list = [0] * self.n1
+
         for i in range(2, self.n1):
             if self.p_list[i] == 0:
                 self.p_list[i] = i
                 self.results.append(i)
             j = 0
             while True:
-                if j < len(self.results) and self.results[j] <= self.p_list[i] and (i * self.results[j]) <= self.n:
+                if (j < len(self.results)
+                        and self.results[j] <= self.p_list[i]
+                        and (i * self.results[j]) <= self.n
+                        ):
+
                     idx = i * self.results[j]
                     self.p_list[idx] = self.results[j]
+
                 else:
                     break
                 j += 1
 
     @property
     def prime_factors(self):
+        """Call to calculate and return list of prime factors."""
         self.__efficient_prime_factors()
         return self.results
 
 
 
-def tests():
-    """Sample tests for instantiation of class and run of prime_factors."""
-    
-    p4 = Primes(4)
-    assert (p4.prime_factors == [2, 3]), "Primes(4) error"
-    
-    
-    p64 = Primes(64)
-    assert (p64.prime_factors == \
-            [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61]), \
-            "Primes(64) error"
-
-
 if __name__ == "__main__":
-    # Run tests.
-    tests()
+    import doctest
+    doctest.testmod()
