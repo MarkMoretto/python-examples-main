@@ -82,6 +82,8 @@ for n in range(epochs):
     results.append(sum([1 if i <= conf_level else 0 for i in rand_vals]) / n_trials)
 mean(results)
 
+
+
 def cls_prop(name, datatype):
     """Class property helper function."""
 
@@ -108,7 +110,6 @@ class SampleSize:
         self.alpha = alpha
         self.ci = 1 - alpha
         self.margin_of_error = margin_of_error
-
 
 
 
