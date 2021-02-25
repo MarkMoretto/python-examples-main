@@ -25,8 +25,20 @@ p = re.compile(ptrn)
 for o, n in zip(p.findall(oldcolumn), newcolumnList):
     oldcolumn = oldcolumn.replace(o, n)
 
-re.sub(ptrn, oldcolumn,)
 
-for i in newcolumnList
-      originalcolumnsRegex.sub(r'{"'newcolumnList[i],oldcolumn)
-      i = i +1
+
+# --- Update with new pattern and method (2021-02-15) --- #
+
+p = re.compile('\{.*?"(?P<mymatch>[A-Z_]+)".+?\}')
+# for mtch in p.finditer(oldcolumn): print(mtch.group("mymatch"))
+
+for o, n in zip(p.findall(oldcolumn), newcolumnList):
+    oldcolumn = re.sub(rf"{o}", n, oldcolumn, flags=re.I)
+
+
+
+# re.sub(ptrn, oldcolumn,)
+
+# for i in newcolumnList
+#       originalcolumnsRegex.sub(r'{"'newcolumnList[i],oldcolumn)
+#       i = i +1
