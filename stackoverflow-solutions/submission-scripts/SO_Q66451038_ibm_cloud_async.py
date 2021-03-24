@@ -14,42 +14,6 @@ Contributor(s):
 
 # https://obamawhitehouse.archives.gov/realitycheck/blog/2015/07/11/weekly-address-making-our-communities-stronger-through-fair-housing
 
-# Folder C:\Users\Work1\Desktop\Info\PythonFiles\watson-files\obama
-# curl -o "080815_WeeklyAddress.mp4" "https://obamawhitehouse.archives.gov/WeeklyAddress/2015/080815-RGDPSW/080815_WeeklyAddress.mp4"
-# curl -o "071115_WeeklyAddress.mp4" "https://obamawhitehouse.archives.gov/WeeklyAddress/2015/071115-DRGDSP/071115_WeeklyAddress.mp4"
-
-# ffmpeg
-# ffmpeg -i "080815_WeeklyAddress.mp4" -vn -ar 16000 -acodec pcm_s16le "080815_WeeklyAddress.wav"
-# ffmpeg -i "071115_WeeklyAddress.mp4" -vn -ar 16000 -acodec pcm_s16le "071115_WeeklyAddress.wav"
-
-"""
-{
-  "apikey": "qbj74s_9YAMjt31Lfp-HepAyEoZeVcahneHQmLG9Ik__",
-  "iam_apikey_description": "Auto-generated for key c7f12a08-7a87-43cd-a7cb-86f89880f81a",
-  "iam_apikey_name": "Auto-generated service credentials",
-  "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Manager",
-  "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/64edba771fbc4e7da12c29bd0c01c00b::serviceid:ServiceId-f3f0b25e-994a-4045-a779-20af58b35fc9",
-  "url": "https://api.us-south.speech-to-text.watson.cloud.ibm.com/instances/726a9204-ea75-4bb7-9d27-90c0bf57e5db"
-}
-
-
-curl -X POST ^
-     -u "apikey:qbj74s_9YAMjt31Lfp-HepAyEoZeVcahneHQmLG9Ik__" ^
-     -o 080815_WeeklyAddress.json ^
-     -H "Content-Type: audio/wav" ^
-     -H "Transfer-Encoding: chunked" ^
-     --data-binary "@080815_WeeklyAddress.wav" ^
-     "https://stream.watsonplatform.net/speech-to-text/api/v1/recognize?continuous=true&timestamps=true&word_confidence=true&profanity_filter=false"
-
-curl -X POST ^
-     -u "apikey:qbj74s_9YAMjt31Lfp-HepAyEoZeVcahneHQmLG9Ik__" ^
-     -o 071115_WeeklyAddress.json ^
-     -H "Content-Type: audio/wav" ^
-     -H "Transfer-Encoding: chunked" ^
-     --data-binary "@071115_WeeklyAddress.wav" ^
-     "https://stream.watsonplatform.net/speech-to-text/api/v1/recognize?continuous=true&timestamps=true&word_confidence=true&profanity_filter=false"
-
-"""
 
 ####RUN THIS PART FIRST#########
 import os
@@ -70,8 +34,8 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 import pandas as pd
 
-my_api_key = "qbj74s_9YAMjt31Lfp-HepAyEoZeVcahneHQmLG9Ik__"
-directory = Path(r"C:\Users\Work1\Desktop\Info\PythonFiles\watson-files\obama")
+my_api_key = "abc4747373747"
+directory = Path(r"C:\path\to\watson-files\obama")
 
 # list(directory.glob("**/*.wav"))
 # audio_file_path = directory.joinpath("080815_WeeklyAddress.wav")
