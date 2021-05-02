@@ -9,6 +9,15 @@ Contributor:
 
 Requirements:
     Python 3.6+
+    
+From command line, all are equivalent:
+    >>> python ascii_to_bin.py
+    >>> python ascii_to_bin.py Hello, World!
+    >>> python ascii_to_bin.py "Hello, World!"
+    >>> python ascii_to_bin.py 'Hello, World!'
+    
+The script defaults to the value Hello, World! if no argument passed.
+The script stripts single- and double-quotation marks before processing.
 '''
 
 import re
@@ -20,7 +29,7 @@ if int(f"{vi.major}{vi.minor}") < 36:
 
 
 """Default phrase to convert if no argument passed."""
-DEFAULT_PHRASE: str = "Expedition rocks!"
+DEFAULT_PHRASE: str = "Hello, World!"
 
 
 def dec_to_bin(decimal_number: int) -> str:
@@ -72,7 +81,6 @@ bin_num_2 = lambda character, z_pad = 8: f'{dec_to_bin(ord(character)):0>{z_pad}
 if __name__ == "__main__":
     import doctest
     opt_flags = doctest.IGNORE_EXCEPTION_DETAIL|doctest.FAIL_FAST
-    # opt_flags = doctest.REPORT_NDIFF|doctest.FAIL_FAST
     
     n_failed, total_tests = doctest.testmod(optionflags=opt_flags)
     if n_failed > 0:
@@ -90,9 +98,7 @@ if __name__ == "__main__":
     except IndexError:
         PHRASE_TO_CONVERT = DEFAULT_PHRASE
 
-
+    # Map and join binary results without spacing for output.
     result = "".join(map(lambda w: bin_num(w), list(PHRASE_TO_CONVERT)))
-
-    # Check if binary string within character limit.
-    # If so, print output.
-    if len(result) <= 150: print(result)
+    
+    print(result)
