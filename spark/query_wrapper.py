@@ -1,48 +1,86 @@
 
 import re
-import pandas as pd
-from functools import wraps
+from pyspark.sql import dataframe
 
-from pyspark import SparkContext, SparkConf
-from pyspark.sql import SparkSession
-from py4j.protocol import Py4JJavaError # To handle local testing errors
-from pyspark.sql.utils import AnalysisException
+# Regular expression for basic SQL parsing.
+# Aim is to capture name of dataframe view.
+SQL_PATTERN: str = r"""
+    (?:\n|\s)?
+    FROM\s([a-z0-9_]+)
+    (?:\n|\s)?
+    """
+
+# Compile regex pattern with flags.
+p = re.compile(SQL_PATTERN, flags = re.I | re.X)
+
 
 
 def query_view(func):
+    """Simple decorator for basic Spark sql query views.
+    """    
     def inner(*args, **kwargs):
         # Try and grab view name from query.
-        query = func(*args, **kwargs)
+        
+        _query: str = None
+        _viewname: str = ""
 
-        sql_pattern = r"(?:\n|\s)?FROM\s([a-z0-9_]+)(?:\n|\s)?"
-        res = re.search(sql_pattern, query, flags=re.I)
-        if res:
-            vw_nm = res.group(1)
+        if len(args) == 1:
+            _query = args[0]
+            if not isinstance(_query, str):
+                raise ValueError("String data type expected.")
 
-        df.createOrReplaceTempView(vw_nm)
-        spark.sql(query).show()
-        spark.catalog.dropTempView(vw_nm)
+            res = p.search(_query)
+            if res:
+                _viewname = res.group(1)
+
+            df.createOrReplaceTempView(_viewname)
+            spark.sql(_query).show()
+            spark.catalog.dropTempView(_viewname)
 
     return inner
 
 
 
-# Takes an optional `view_name` argument
 def query_view_df(func):
+    """Simple decorator for basic Spark sql query views.
+    
+    Similar to `query_view`, but this wrapper allows for passing of
+    DataFrame object.
+    """
     def inner(*args, **kwargs):
-        '''
-        Args should include `query` and `dataframe` objects.
-        '''
-        query, df = func(*args, **kwargs)
+        """Args list should include a query string and pandas.DataFrame objects.
+        """
+        _query: str = None
+        _df = None
+        _viewname: str = ""
+            
+        # Check argument count
+        if len(args) == 2:
+            # Assert data type of one argument
+            # Set variables accordingly.
+            if isinstance(args[0], str):
+                _query = args[0]
+                _df = args[1]
+            else:
+                _df = args[0]
+                _query = args[1]
+            
+            # Quick validation.
+            assert isinstance(_query, str), "String expected."
+            assert isinstance(_df, dataframe.DataFrame), "PySpark.sql.dataframe.DataFrame expected."
 
-        sql_pattern = r"(?:\n|\s)?FROM\s([a-z0-9_]+)(?:\n|\s)?"
-        res = re.search(sql_pattern, query, flags=re.I)
-        if res:
-            vw_nm = res.group(1)
+            
+            # Search for viewname within SQL query.
+            # If found, update _viewname variable.
+            res = p.search(_query)
+            if res:
+                _viewname = res.group(1)
 
-        df.createOrReplaceTempView(vw_nm)
-        spark.sql(query).show()
-        spark.catalog.dropTempView(vw_nm)
+            # Create temporary view, run SQL, destroy temporary view.
+            _df.createOrReplaceTempView(_viewname)
+            spark.sql(_query).show()
+            spark.catalog.dropTempView(_viewname)
+            
     return inner
 
 
