@@ -1,6 +1,19 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals
 
-from typing import Iterator, Iterable
+# Check for typing module, which was introduced in Python 3.5.x.
+# If not legit, try import it from collections.abc.
+# Finally, if all else fails, make your own iterator type and proceed.
+try:
+    from typing import Iterator
+except ModuleNotFoundError:
+    try:
+        from collections.abc import Iterator
+    except ModuleNotFoundError:
+        Iterator = (list, tuple, set, dict).__iter__()
+	
 
 def chunkerator(obj: Iterable, stepsize: int = 10) -> Iterator:
     """
