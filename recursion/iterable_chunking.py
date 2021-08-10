@@ -7,13 +7,15 @@ from __future__ import unicode_literals
 # If not legit, try import it from collections.abc.
 # Finally, if all else fails, make your own iterator type and proceed.
 try:
-    from typing import Iterator
+    from typing import Iterable, Iterator
 except ModuleNotFoundError:
     try:
-        from collections.abc import Iterator
+        from collections.abc import Iterable, Iterator
     except ModuleNotFoundError:
         Iterator = (list, tuple, set, dict).__iter__()
-	
+        Iterable = Iterator.__next__()
+
+
 
 def chunkerator(obj: Iterable, stepsize: int = 10) -> Iterator:
     """
